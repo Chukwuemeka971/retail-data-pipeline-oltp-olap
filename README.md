@@ -151,6 +151,31 @@ WHERE revenue > (
     FROM city_revenue
 );
 ```
+### Average Sales per product
+```
+WITH monthly_sales AS (
+    SELECT 
+        o.product_id,
+        d.year,
+        d.month_name,
+        SUM(o.amount * o.quantity) AS monthly_sales
+    FROM flowcart.orders o
+    JOIN flowcart.dates d 
+        ON o.date_id = d.date_id
+    GROUP BY o.product_id, d.year, d.month_name
+)
+
+SELECT 
+    p.product_id,
+    p.category,
+    p.sub_category,
+    ROUND(AVG(m.monthly_sales)::numeric, 2) AS avg_monthly_sales
+FROM monthly_sales m
+JOIN flowcart.products p 
+    ON m.product_id = p.product_id
+GROUP BY p.product_id, p.category, p.sub_category
+ORDER BY avg_monthly_sales DESC;
+```
   
    
    
