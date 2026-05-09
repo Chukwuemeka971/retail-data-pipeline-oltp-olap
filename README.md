@@ -60,7 +60,13 @@ Raw CSV → Pandas (Cleaning & Transformation) → PostgreSQL
 - Transaction handling with rollback
 
 ---
+## Technologies Used
+- Python 3
+- Pandas
+- PostgreSQL
+- psycopg2
 
+---
 ## How to Run the Project
 
 ### 1. Clone Repository
@@ -71,36 +77,56 @@ cd retail-data-pipeline-oltp-olap
 
 ---
 ### 2. Install dependencies
-pip install pandas psycopg2
+</> Bash
+```
+pip install pandas psycopg2 python-dotenv
+```
 
 ---
-### 3. Set Environment Variable
+### 3. Create a .env File
+Create a .env file in the project root directory
 ```
-</> Bash
+</> env
 
-# Mac/Linux
-export DB_PASSWORD=your_password
-
-# Windows
-set DB_PASSWORD=your_password
+db_host=localhost
+db_name=flowcart
+db_user=postgres
+db_password=your_password
+db_port=5432
 ```
-### 4. Run Data Cleaning (Pandas)
+
+---
+### 4. Start PostgreSQL
+Ensure PostgreSQL is running and create a database named:
+```
+flowcart
+```
+
+---
+### 5. Run Data Cleaning Pipeline
+This notebook:
+
+- Cleans raw retail data
+- standardizes columns
+- Creates dimension & fact tables
+- Exports cleaned CSV files
 ```
 </> Bash
 
 jupyter notebook notebooks/data_cleaning.ipynb
 ```
-This step:
-
-- Cleans raw data
-- Creates dimension & fact tables
-- Exports CSV files to:
+Generated files will be stored in
 ```
 data/clean_dataset/
 data/transactions_data/
 ```
 ---
-### 5. Load Data into PostgreSQL
+### 6. Load Data into PostgreSQL
+This notebook:
+- Connects to PostgreSQL using environment variables
+- Creates OLTP(transact) and OLAP(flowcart) schemas
+- Creates tables
+- Loads cleaned CSV data into PostgreSQL
 ```
 </> Bash
 
